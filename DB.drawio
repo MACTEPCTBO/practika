@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 YaBrowser/25.2.0.0 Safari/537.36" version="26.1.1">
+  <diagram name="Страница — 1" id="yJFUmVNQ_eP-NBh2ZVk_">
+    <mxGraphModel dx="1877" dy="575" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cP1Hd80A186uDEQBJBVi-1" value="User&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ID: int&lt;/div&gt;&lt;div&gt;ID_Responsible:int&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Is_Blocked:VarChar(3)&lt;/span&gt;&lt;/div&gt;&lt;div&gt;Login:Text(500)&lt;/div&gt;&lt;div&gt;Password:TEXT(500)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="40" width="280" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="cP1Hd80A186uDEQBJBVi-2" target="cP1Hd80A186uDEQBJBVi-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-2" value="Responsible&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ID:int&lt;/div&gt;&lt;div&gt;FIO: TEXT(500)&lt;/div&gt;&lt;div&gt;Phone:TEXT(20)&lt;/div&gt;&lt;div&gt;&lt;div&gt;Email:Text(500)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;Role: VarChar(10)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-160" y="40" width="320" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-4" value="&lt;b&gt;&lt;span style=&quot;font-size: 14pt;&quot; lang=&quot;EN-US&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot; face=&quot;Helvetica&quot;&gt;Components&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;span style=&quot;font-size: 14pt;&quot; lang=&quot;EN-US&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot; face=&quot;Helvetica&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;span style=&quot;font-size: 14pt;&quot; lang=&quot;EN-US&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot; face=&quot;Helvetica&quot;&gt;ID:int&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;span style=&quot;font-size: 14pt;&quot; lang=&quot;EN-US&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot; face=&quot;Helvetica&quot;&gt;Name:VarChar(45)&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;span style=&quot;font-size: 14pt;&quot; lang=&quot;EN-US&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot; face=&quot;Helvetica&quot;&gt;IDSerial:int&lt;/font&gt;&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 18.6667px;&quot;&gt;&lt;b&gt;VendorID:int&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 18.6667px;&quot;&gt;&lt;b&gt;CompType:int&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="280" width="280" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="cP1Hd80A186uDEQBJBVi-5" target="cP1Hd80A186uDEQBJBVi-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-5" value="Vendor&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ID:int&lt;/div&gt;&lt;div&gt;Name:VarChar(45)&lt;/div&gt;&lt;div&gt;Phone:VarChar(15)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-160" y="280" width="320" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="cP1Hd80A186uDEQBJBVi-7" target="cP1Hd80A186uDEQBJBVi-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-7" value="CompType&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ID:int&lt;/div&gt;&lt;div&gt;type:int&lt;/div&gt;&lt;div&gt;ID_type:int&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-160" y="520" width="320" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="cP1Hd80A186uDEQBJBVi-9" value="ID_Type&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;ID:&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-160" y="720" width="320" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -34,23 +34,32 @@ public class Devices implements StageAwareController {
     @FXML private TableColumn<Commponent, String> colCabinet;
     @FXML private TableColumn<Commponent, String> colStatus;
 
-    private NetworkManager networkManager = new NetworkManager();
-
+    private NetworkManager networkManager;
+    private int id;
 
     private Stage primaryStage;
 
+    public void initData(int userId) {
+        this.id = userId;
+        System.out.println("Received user ID: " + userId); // Для отладки
+        loadComponentsData(); // Перезагружаем данные с новым ID
+    }
+
     @FXML
     public void initialize() {
+        networkManager = new NetworkManager();
         // Инициализация колонок таблицы
         if (!networkManager.connect()) {
             new Alert(Alert.AlertType.ERROR, "Не удалось подключиться к серверу").show();
             System.exit(1);
         }
+        System.out.println("Connected to network");
 
 
         loadComponentsData();
         setupTableColumns();
     }
+
 
     private void setupTableColumns() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -93,12 +102,15 @@ public class Devices implements StageAwareController {
 
     @FXML
     private void handleAddDevice() {
-        /*AddComponentDialog dialog = new AddComponentDialog();
-        boolean isSaved = dialog.showAndWait();
-
-        if (isSaved) {
-            refreshComponentsData();
-        }*/
+        networkManager = new NetworkManager();
+        if (!networkManager.connect()) {
+            new Alert(Alert.AlertType.ERROR,"Соеденение не установленно").show();
+            System.exit(1);
+        }
+        System.out.println("Connected to network");
+        AddComponentDialogFX addDialog = new AddComponentDialogFX(primaryStage, networkManager);
+        addDialog.initData(id);
+        addDialog.show();
     }
 
     private void refreshComponentsData() {

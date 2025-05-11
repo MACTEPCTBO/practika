@@ -1,8 +1,6 @@
 package com.company.itinfra.practika4.DataBase;
 
-import com.company.itinfra.practika4.Models.Commponent;
-import com.company.itinfra.practika4.Models.ComponentDTO;
-import com.company.itinfra.practika4.Models.User;
+import com.company.itinfra.practika4.Models.*;
 
 import java.awt.*;
 import java.io.*;
@@ -88,6 +86,52 @@ public class NetworkManager {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             System.err.println("Ошибка получения товаров: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<ComponentType> getTypeComponent() {
+        try {
+            output.writeObject("GetComponentType");
+            List<ComponentType> componentTypes = (List<ComponentType>) input.readObject();
+
+            return componentTypes;
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Manufacturer> getManufacturer() {
+        try {
+            output.writeObject("GetManufacturer");
+            List<Manufacturer> manufacturers = (List<Manufacturer>) input.readObject();
+
+            return manufacturers;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Seller> getSeller() {
+        try {
+            output.writeObject("GetSeller");
+            List<Seller> sellers = (List<Seller>) input.readObject();
+
+            return sellers;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Cabinet> getCabinet(int id) {
+        try {
+            output.writeObject("GetCabinet");
+            output.writeObject(id);
+            List<Cabinet> cabinets = (List<Cabinet>) input.readObject();
+
+            return cabinets;
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

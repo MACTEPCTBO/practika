@@ -8,16 +8,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ServerHandler implements Runnable {
     private final Socket clientSocket;
-    private final DatabaseManager dbManager;
+    private DatabaseManager dbManager;
     private final AuthManager authManager;
 
     private ObjectInputStream input;
@@ -41,21 +39,187 @@ public class ServerHandler implements Runnable {
             while (!clientSocket.isClosed()) {
                 String command = (String) input.readObject();
                 System.out.println("Получена команда: " + command);
+                dbManager = new DatabaseManager();
+                if (clientSocket.isClosed()) {
+                    return;
+                }
 
                 switch (command) {
                     case "Login":
                         handleLogin();
                         break;
                     case "UpdateTableDevices":
-                        System.out.println("Start updating table devices");
                         handleGetDevices();
+                        break;
+                    case "GetComponentType":
+                        handleGetComponentType();
+                        break;
+                    case "GetManufacturer":
+                        handleGetManufacturer();
+                        break;
+                    case "GetSeller":
+                        handleGetSeller();
+                        break;
+                    case "GetCabinet":
+                        handleGetCabinet();
+                        break;
+                    default:
                         break;
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException | SQLNonTransientConnectionException e) {
             System.out.println("Ошибка обработки клиента: " + e.getMessage());
         } finally {
             closeConnection();
+            dbManager.close();
+        }
+    }
+
+    private void handleGetComponentType() throws IOException, SQLNonTransientConnectionException {
+        List<ComponentType> componentTypes = new ArrayList<>();
+        String query = "SELECT * FROM component_type";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                ComponentType type = new ComponentType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("created_at"), // created_at
+                        rs.getString("updated_at")  // updated_at
+                );
+                componentTypes.add(type);
+            }
+        } catch (SQLException e) {
+            System.err.println("Ошибка при загрузке типов компонентов: " + e.getMessage());
+            e.printStackTrace();
+            // Можно добавить обработку ошибки, например, показать сообщение пользователю
+        }
+
+
+        output.writeObject(componentTypes);
+    }
+
+    private void handleGetManufacturer() throws IOException, SQLNonTransientConnectionException {
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        String query = "SELECT id, name, website, country, created_at, updated_at FROM manufacturer ORDER BY name";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Manufacturer manufacturer = new Manufacturer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("website"),
+                        rs.getString("country"),
+                        rs.getString("created_at")
+                );
+                manufacturers.add(manufacturer);
+            }
+
+            // Отправляем список производителей клиенту
+            output.writeObject(manufacturers);
+
+        } catch (SQLException e) {
+            System.err.println("Ошибка при загрузке производителей: " + e.getMessage());
+
+            // Если соединение с БД потеряно, пробрасываем исключение выше
+            if (e instanceof SQLNonTransientConnectionException) {
+                throw (SQLNonTransientConnectionException) e;
+            }
+
+            // Для других SQL ошибок отправляем клиенту пустой список
+            output.writeObject(new ArrayList<Manufacturer>());
+        }
+    }
+
+    private void handleGetCabinet() throws IOException, SQLNonTransientConnectionException {
+        List<Cabinet> cabinets = new ArrayList<>();
+        String query = "SELECT c.id, c.number, c.description, f.id as floor_id, f.number as floor_number, " +
+                "f.description as floor_desc, o.id as office_id, o.name as office_name " +
+                "FROM cabinet c " +
+                "JOIN floor f ON c.floor_id = f.id " +
+                "JOIN office o ON f.office_id = o.id " +
+                "JOIN employee e ON e.office_id = o.id " +
+                "WHERE e.id = ?";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, (int) input.readObject());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Office office = new Office(
+                            rs.getInt("office_id"),
+                            rs.getString("office_name"),
+                            "", "", ""
+                    );
+
+                    Floor floor = new Floor(
+                            rs.getInt("floor_id"),
+                            office,
+                            rs.getInt("floor_number"),
+                            rs.getString("floor_desc"),
+                            "", ""
+                    );
+
+                    Cabinet cabinet = new Cabinet(
+                            rs.getInt("id"),
+                            floor,
+                            Integer.parseInt(rs.getString("number")),
+                            rs.getString("description"),
+                            "", ""
+                    );
+                    cabinets.add(cabinet);
+                }
+            }
+            System.out.println("\n" + cabinets.get(0).getFloor().getNumber());
+            output.writeObject(cabinets);
+
+        } catch (SQLException e) {
+            System.err.println("Ошибка при загрузке кабинетов: " + e.getMessage());
+            if (e instanceof SQLNonTransientConnectionException) {
+                throw (SQLNonTransientConnectionException) e;
+            }
+            output.writeObject(new ArrayList<Cabinet>());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void handleGetSeller() throws IOException, SQLNonTransientConnectionException {
+        List<Seller> sellers = new ArrayList<>();
+        String query = "SELECT * FROM seller";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Seller seller = new Seller(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("legal_name"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("website"),
+                        rs.getString("created_at")
+                );
+                sellers.add(seller);
+            }
+
+            // Отправляем список производителей клиенту
+            output.writeObject(sellers);
+        } catch (SQLException e) {
+            System.err.println("Ошибка при загрузке типов Продавцов: " + e.getMessage());
+            e.printStackTrace();
+            // Можно добавить обработку ошибки, например, показать сообщение пользователю
         }
     }
 
@@ -72,7 +236,7 @@ public class ServerHandler implements Runnable {
         }
     }
 
-    private void handleGetDevices() throws IOException, ClassNotFoundException {
+    private void handleGetDevices() throws IOException, ClassNotFoundException, SQLNonTransientConnectionException {
         System.out.println("Чтение данных");
         try {
             int employeeId = (int) input.readObject();
@@ -99,6 +263,10 @@ public class ServerHandler implements Runnable {
                     "JOIN seller s ON c.seller_id = s.id " +
                     "WHERE cm.performed_by = ?"; // Используем параметризованный запрос
 
+            System.out.println(dbManager.getConnection().isClosed());
+            if (dbManager.getConnection().isClosed()) {
+                dbManager = new DatabaseManager();
+            }
             try (PreparedStatement stmt = dbManager.getConnection().prepareStatement(query)) {
                 stmt.setInt(1, employeeId);
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -156,7 +324,6 @@ public class ServerHandler implements Runnable {
                                 rs.getString("seller_legal_name"),
                                 rs.getString("seller_phone"),
                                 rs.getString("seller_email"),
-                                "", // address
                                 rs.getString("seller_website"),
                                 ""  // created_at
                         );
@@ -179,12 +346,7 @@ public class ServerHandler implements Runnable {
                         components.add(component);
                         // Добавляем component в коллекцию или обрабатываем дальше
                     }
-
-
-
-
                 }
-
                 List<ComponentDTO> componentDTOs = components.stream()
                         .map(ComponentDTO::new)
                         .collect(Collectors.toList());

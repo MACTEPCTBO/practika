@@ -8,19 +8,17 @@ public class Seller implements Serializable {
     private String legalName;
     private String phone;
     private String email;
-    private String address;
     private String website;
 
     private String created_at;
     private String updated_at;
 
-    public Seller(int id, String name, String legalName, String phone, String email, String address, String website, String created_at) {
+    public Seller(int id, String name, String legalName, String phone, String email, String website, String created_at) {
         this.id = id;
         this.name = name;
         this.legalName = legalName;
         this.phone = phone;
         this.email = email;
-        this.address = address;
         this.website = website;
         this.created_at = created_at;
     }
@@ -39,9 +37,6 @@ public class Seller implements Serializable {
     }
     public String getEmail() {
         return email;
-    }
-    public String getAddress() {
-        return address;
     }
     public String getWebsite() {
         return website;
@@ -67,9 +62,6 @@ public class Seller implements Serializable {
     }
     public void setEmail(String email) {
         this.email = email;
-    }
-    public void setAddress(String address) {
-        this.address = address;
     }
     public void setWebsite(String website) {
         this.website = website;

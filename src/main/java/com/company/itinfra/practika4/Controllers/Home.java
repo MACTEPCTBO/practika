@@ -73,6 +73,10 @@ public class Home {
                 ((StageAwareController) controller).setPrimaryStage(primaryStage);
             }
 
+            if (controller instanceof Devices) {
+                ((Devices) controller).initData(this.idUser);
+            }
+
             contentPane.getChildren().setAll(content);
         } catch (IOException e) {
             showError("Ошибка загрузки раздела", "Не удалось загрузить содержимое раздела");
@@ -99,6 +103,7 @@ public class Home {
     private void showSoftwareSection(ActionEvent event) {
         statusLabel.setText("Раздел: Управление лицензиями ПО");
         loadContent(fxmlPaths.get("software"));
+
     }
 
     @FXML
@@ -145,6 +150,7 @@ public class Home {
             e.printStackTrace();
         }
     }
+
 }
 
 // Интерфейс для контроллеров, которым нужен доступ к Stage
